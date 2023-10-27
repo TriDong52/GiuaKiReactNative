@@ -3,7 +3,6 @@ import { Text, StyleSheet, View, Image ,SafeAreaView, Button} from 'react-native
 import { SCREENS } from '../../helpers/constants';
 import TabNavigation from '../../navigation/tab';
 
-
 const OnBoardScreen = ({navigation}) => {
   
  return (
@@ -38,7 +37,7 @@ const OnBoardScreen = ({navigation}) => {
           <View style={style.indicator} />
           <View style={style.indicator} />
         </View>
-        <Button title="Get Started" color={"orange"} onPress={() => navigation.navigate('Home')} />
+        <Button title="Get Started" color={"orange"} onPress={() => navigation.navigate('Auth')} />
       </View>
     </SafeAreaView>
  );

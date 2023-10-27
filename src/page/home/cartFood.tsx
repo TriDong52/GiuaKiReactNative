@@ -19,9 +19,9 @@ const CartFood = () => {
 
   const FoodItem = ({ itemFood, onPressF }: FoodItemProps) => (
     <View style={styles.cartCard}>
-      <Image source={itemFood.imageF} style={{ height: 80, width: 80 }} />
+      <Image source={itemFood.image} style={{ height: 80, width: 80 }} />
       <View style={{ height: 100, marginLeft: 10, paddingVertical: 20, flex: 1 }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{itemFood.nameF}</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{itemFood.name}</Text>
         <Text style={{ fontSize: 13, color: 'grey' }}>{itemFood.ingredients}</Text>
         <Text style={{ fontSize: 17, fontWeight: 'bold' }}>${itemFood.price}</Text>
       </View>

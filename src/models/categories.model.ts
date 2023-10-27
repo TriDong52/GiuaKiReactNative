@@ -1,5 +1,5 @@
 export interface CategoriesModel{ 
-    idC: string;
-    nameC: string;
-    imageC: string; 
+    id: string;
+    name: string;
+    image: string; 
 }

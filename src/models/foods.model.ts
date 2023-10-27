@@ -1,7 +1,7 @@
 export interface FoodModel{
-    idF: string;
-    nameF: string;
-    imageF: string; 
+    id: string;
+    name: string;
+    image: string; 
     ingredients: string;
     price: number;
 }

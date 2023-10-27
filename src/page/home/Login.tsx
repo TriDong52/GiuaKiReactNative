@@ -1,151 +1,181 @@
-import React from "react";
-import { SafeAreaView, StatusBar, StyleSheet, View, Image, Text, TextInput, Button } from "react-native";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
+import React, { useState, createRef } from 'react';
+import { SafeAreaView, StyleSheet, Text, TextInput, Button, TouchableOpacity, View, StatusBar, Keyboard } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { SCREENS } from "../../helpers/constants";
 
-const LoginPage = ({navigation}) => {
+const LoginPage = ({ navigation }) => {
+    const [isPasswordVisible, setPasswordVisible] = useState(false);
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!isPasswordVisible);
+    }
+    const [userEmail, setUserEmail] = useState('');
+    const [userPassword, setUserPassword] = useState('');
+    const [errortext, setErrortext] = useState('');
+    const passwordInputRef = createRef();
+
+    const handleSubmitPress = () => {
+        setErrortext('');
+        if (!userEmail || !userPassword) {
+            alert('Vui lòng điền đủ thông tin');
+            return;
+        }
+
+        let dataToSend = { email: userEmail, password: userPassword };
+
+        fetch('http://localhost:3000/login', {
+            method: 'POST',
+            body: JSON.stringify(dataToSend),
+            headers: {
+                //Header Defination
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                if (responseJson.status === 'success') {
+                    console.log(responseJson.data);
+                    navigation.replace('Home');
+                } else {
+                    setErrortext(responseJson.error);
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
     return (
         <SafeAreaView>
-
-            <StatusBar backgroundColor={styles.statusBar.backgroundColor}
-                barStyle='dark-content'
-                animated={true} />
-
+            <StatusBar backgroundColor="orange" />
             <View style={styles.container}>
-                <View style={styles.logoContainer}>
-                    <Image source={require('../../assets/image/logo.png')} style={styles.logo} />
-                    <Text style={styles.logoTitle}>VnCare</Text>
+                <View style={{ flexDirection: "row", }}>
+                    <Icon style={styles.icon} name="angle-left" size={30} color="black" />
+                    <Text style={styles.text1}>
+                        Login here
+                    </Text>
                 </View>
-                <View style={styles.pageContainer}>
-                    <Text style={styles.pageTitle}>Đăng nhập</Text>
-                    <View style={styles.btnPhoneContainer} >
-                        <Button title="Thay số điện thoại" color="#3BCCBB"/>
+
+                <View style={{ alignItems: 'center' }}>
+                    <Text style={styles.text2}>
+                        Wellcome back you've been missed!
+                    </Text>
+                    <View>
+                        <View style={styles.input}>
+                            <TextInput
+                                onChangeText={(UserEmail) => setUserEmail(UserEmail)}
+                                placeholder='Email'
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                onSubmitEditing={() => passwordInputRef.current && passwordInputRef.current.focus()}
+                                blurOnSubmit={false} />
+                        </View>
+                        <View style={styles.input}>
+                            <TextInput
+                                onChangeText={(UserPassword) => setUserPassword(UserPassword)}
+                                placeholder='Password'
+                                secureTextEntry={true}
+                                keyboardType="default"
+                                ref={passwordInputRef}
+                                onSubmitEditing={Keyboard.dismiss}
+                                blurOnSubmit={false}
+                                returnKeyType="next" />
+                            <TouchableOpacity>
+                                <Icon style={{ marginTop: 15, marginLeft: 200 }}
+                                    name={"eye-slash"}
+                                    size={20}
+                                    color="gray" />
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <View style={styles.formGroup}>
-                        <Text style={styles.formLabel}>Số điện thoại</Text>
-                        <TextInput style={styles.formControl} placeholder="Nhập số điện thoại" />
+                    <View>
+                        <Text style={{ fontFamily: 'popins-semiBold', fontSize: 15, color: 'blue', marginLeft: 150 }}>
+                            Forgot your password ?
+                        </Text>
                     </View>
-                    <View style={styles.formGroup}>
-                        <Text style={styles.formLabel}>Mật khẩu</Text>
-                        <TextInput style={styles.formControl} placeholder="Nhập mật khẩu" secureTextEntry={true}/>
-                    </View>
-                    <View style={styles.forgotPassContainer}>
-                        <BouncyCheckbox
-                            size={25}
-                            fillColor="red"
-                            unfillColor="#FFFFFF"
-                            text="Ghi nhớ"
-                            iconStyle={{ borderColor: "red" }}
-                            innerIconStyle={{ borderWidth: 2 }}
-                            textStyle={{ fontFamily: "JosefinSans-Regular" }}
-                            onPress={(isChecked: boolean) => {}}
-                        />
-                        <Button title="Quên mật khẩu"/>
-                    </View>
-                    <View style={styles.btnPrimary}>
-                        <Button title="Đăng nhập" color={styles.btnPrimary.backgroundColor}/>
-                    </View>
-                    <View style={styles.btnOutlinePrimary}>
-                        <Button title="Đăng ký" color={styles.btnOutlinePrimary.color}
-                         onPress={() => navigation.navigate(SCREENS.REGISTER)}/>
+                    {errortext != '' ? (
+                        <Text style={styles.errorTextStyle}>
+                            {errortext}
+                        </Text>
+                    ) : null}
+                    <TouchableOpacity style={styles.signin} onPress={handleSubmitPress}>
+                        <Text>Sign in</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate(SCREENS.REGISTER)} style={styles.Creat}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#000000' }}>Creat a new account</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity >
+                        <Text style={{ fontSize: 13, color: 'blue' }}>Or continue with</Text>
+                    </TouchableOpacity>
+                    <View style={{ flexDirection: "row", padding: 5 }}>
+                        <TouchableOpacity >
+                            <Icon style={styles.icon} name="google" size={40} color="red" />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Icon style={styles.icon} name="apple" size={40} color="black" />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Icon style={styles.icon} name="facebook" size={40} color="blue" />
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
-
         </SafeAreaView>
-    )
+    );
 }
-
 export default LoginPage;
-
+const spacing = 10;
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        paddingLeft: 5,
-        paddingRight: 5,
-        
+        flexDirection: "column",
+        padding: 10,
     },
-
-    logo:{
-        width:80,
-        height:80
-    },
-    logoContainer:{
-        marginTop: 20,
-        marginBottom: 20,
-        alignItems:'center'
-    },
-    logoTitle: {
-        color: '#1B86CE',
+    text1: {
+        fontSize: 30,
+        color: "#FFA500",
+        fontFamily: "popins-bold",
+        //marginVertical: spacing * 3,
         fontWeight: 'bold',
-        fontSize: 31,
-        marginTop: 24
-    },
-    statusBar: {
-        backgroundColor: '#3BCCBB'
-    },
-    pageTitle: {
-        fontSize: 17,
-        fontWeight: '600',
-        marginTop: 20,
-        color: '#141414'
-    },
-    pageContainer: {
-        alignSelf: 'stretch',
-        alignItems: 'center'
-    },
-    btnPhoneContainer: {
-        marginTop: 40,
-        alignSelf: 'flex-end'
-    },
-    formGroup: {
-        alignSelf: 'stretch',
-        marginBottom: 10
-    },
-    formLabel: {
-        fontWeight: '600',
-        fontStyle: 'italic',
-        color: '#757575',
-        fontSize: 13
-    },
-    formControl: {
-        paddingTop: 15,
-        paddingBottom: 15,
-        borderBottomColor: '#757575',
-        borderBottomWidth: 1
-    },
-    forgotPassContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignSelf:'stretch',
-       
-       
-    },
-    btnPrimary:{
-        backgroundColor:'#3BCCBB',
-        color: '#3BCCBB',
-        fontWeight: 'bold',
-        fontSize: 15,
-        alignSelf:'stretch',
-        marginLeft: 15,
-        marginRight: 15,
-        padding: 7,
+        marginLeft: 80,
         marginTop: 10,
-        borderRadius: 10
+        marginBottom: 15
     },
-    btnOutlinePrimary:{
-     
-        borderColor:'#3BCCBB',
-        borderWidth: 1,
-        color: '#3BCCBB',
+    text2: {
+        fontSize: 20,
+        color: "#000000",
+        fontFamily: "popins-semiBold",
         fontWeight: 'bold',
-        fontSize: 15,
-        alignSelf:'stretch',
-        marginLeft: 15,
-        marginRight: 15,
-        padding: 7,
-        marginTop: 10,
-        borderRadius: 5
-    }
-})
+        marginVertical: spacing * 2,
+        textAlign: "center",
+        maxWidth: '60%'
+    },
+    input: {
+        flexDirection: "row",
+        fontFamily: "popins-regular",
+        padding: 5,
+        backgroundColor: '#ECECEC',
+        borderRadius: 15,
+        marginVertical: 17,
+        width: 350
+    },
+    passwordIcon: {
+        padding: 10,
+    },
+    signin: {
+        padding: 15, backgroundColor: '#FFA500', marginVertical: 15, borderRadius: 10, width: 350, alignItems: 'center',
+        marginTop: 30
+    },
+    Creat: {
+        padding: 15, marginVertical: 10, width: 350, alignItems: 'center',
+        marginTop: 15,
+    },
+    icon: {
+        justifyContent: "flex-start",
+        padding: 15,
+    },
+    errorTextStyle: {
+        color: 'red',
+        textAlign: 'center',
+        fontSize: 14,
+      },
+});
