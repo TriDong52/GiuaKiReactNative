@@ -16,6 +16,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { CategoriesModel } from "../../models/categories.model";
 import { FoodModel } from "../../models/foods.model";
 import { SCREENS } from "../../helpers/constants";
+import BaseUrl from "../url";
 
 const { width } = Dimensions.get('window'); // Lấy kích thước màn hình
 const cardWidth = width / 2 - 20; // Tính toán kích thước cho card
@@ -33,7 +34,7 @@ const CategoryList = () => {
     <TouchableOpacity onPress={onPress}>
       <View style={{ ...styles.categoryBtn, backgroundColor: "orange" }}>
         <Image
-          source={{ uri: 'http://localhost:3000/' + itemCategory.image }}
+          source={{ uri: BaseUrl + itemCategory.image }}
           style={{ width: 20, height: 20, borderRadius: 50 }}
         />
         <Text
@@ -53,7 +54,7 @@ const CategoryList = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:3000/category');
+        const response = await fetch(BaseUrl + 'category');
         if (response.status === 200) {
           const data = await response.json();
           setCategories(data);
@@ -92,7 +93,7 @@ const FoodItem = ({ itemFood, onPressF }: FoodItemProps) => (
   <TouchableHighlight underlayColor={"white"} activeOpacity={0.9} onPress={onPressF}>
     <View style={styles.card}>
       <View style={{ alignItems: 'center', top: -40 }}>
-        <Image source={{ uri: 'http://localhost:3000/' + itemFood.image }} style={{ height: 100, width: 100 }} />
+        <Image source={{ uri: BaseUrl + itemFood.image }} style={{ height: 100, width: 100 }} />
       </View>
       <View style={{ marginHorizontal: 20 }}>
         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{itemFood.name}</Text>
@@ -130,7 +131,7 @@ const FoodHome = ({ navigation }) => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const response = await fetch('http://localhost:3000/food');
+        const response = await fetch(BaseUrl + 'food');
         if (response.status === 200) {
           const data = await response.json();
           setFoods(data);

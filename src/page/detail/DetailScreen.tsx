@@ -1,6 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import BaseUrl from '../url';
 
 const DetailsScreen = ({ route, navigation }) => {
   const { foodName, foodImage } = route.params
@@ -18,7 +19,7 @@ const DetailsScreen = ({ route, navigation }) => {
             alignItems: 'center',
             height: 280,
           }}>
-          <Image source={{ uri: 'http://localhost:3000/' + foodImage}} style={{ height: 220, width: 220 }} />
+          <Image source={{ uri: BaseUrl + foodImage}} style={{ height: 220, width: 220 }} />
         </View>
         <View style={style.details}>
           <View

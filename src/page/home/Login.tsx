@@ -2,6 +2,7 @@ import React, { useState, createRef } from 'react';
 import { SafeAreaView, StyleSheet, Text, TextInput, Button, TouchableOpacity, View, StatusBar, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { SCREENS } from "../../helpers/constants";
+import BaseUrl from "../url";
 
 const LoginPage = ({ navigation }) => {
     const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -22,7 +23,7 @@ const LoginPage = ({ navigation }) => {
 
         let dataToSend = { email: userEmail, password: userPassword };
 
-        fetch('http://localhost:3000/login', {
+        fetch(BaseUrl + 'login', {
             method: 'POST',
             body: JSON.stringify(dataToSend),
             headers: {

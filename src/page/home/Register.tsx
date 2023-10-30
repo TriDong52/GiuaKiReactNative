@@ -2,7 +2,7 @@ import React, { useState, createRef } from 'react';
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, StatusBar, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { SCREENS } from "../../helpers/constants";
-
+import BaseUrl from '../url';
 
 const Register = ({ navigation }) => {
     const [userName, setUserName] = useState('');
@@ -30,7 +30,7 @@ const Register = ({ navigation }) => {
             password: userPassword,
         };
 
-        fetch('http://localhost:3000/register', {
+        fetch(BaseUrl + 'register', {
             method: 'POST',
             body: JSON.stringify(dataToSend),
             headers: {
