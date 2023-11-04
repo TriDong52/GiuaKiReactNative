@@ -89,7 +89,6 @@ const Register = ({ navigation }) => {
                                 onChangeText={(UserName) => setUserName(UserName)}
                                 placeholder='Name'
                                 returnKeyType="next"
-                                keyboardType="email-address"
                                 onSubmitEditing={() =>
                                     emailInputRef.current && emailInputRef.current.focus()
                                 }
@@ -100,6 +99,7 @@ const Register = ({ navigation }) => {
                                 onChangeText={(UserEmail) => setUserEmail(UserEmail)}
                                 ref={emailInputRef}
                                 returnKeyType="next"
+                                keyboardType="email-address"
                                 onSubmitEditing={() =>
                                     passwordInputRef.current &&
                                     passwordInputRef.current.focus()

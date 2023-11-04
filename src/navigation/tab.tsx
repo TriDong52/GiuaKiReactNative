@@ -7,6 +7,7 @@ import FoodHome from "../page/home/FoodHome";
 import LoginPage from "../page/home/Login";
 import RegisterPage from "../page/home/Register";
 import CartFood from "../page/home/cartFood";
+import SetScreen from "../page/home/Setting";
 
 const LoginStack = createNativeStackNavigator()
 
@@ -31,8 +32,8 @@ const TabNavigation = () => {
             iconName = "home";
           } else if (route.name === "CartFood") {
             iconName = "shopping-cart";
-          } else if (route.name === "login") {
-            iconName = "sign-in";
+          } else if (route.name === "Setting") {
+            iconName = "gear";
           }
           return <Icon name={iconName} size={size} color={color} />;
         },
@@ -60,12 +61,12 @@ const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="login"
-        component={LoginStackScreen}
+        name="Setting"
+        component={SetScreen}
         options={{
           headerShown:false,
           tabBarIcon: ({ color, size }) => (
-            <Icon name="sign-in" size={size} color={color} />
+            <Icon name="gear" size={size} color={color} />
           ),
         }}
       />

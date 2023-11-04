@@ -1,7 +1,8 @@
 import React, { useState, createRef } from 'react';
-import { SafeAreaView, StyleSheet, Text, TextInput, Button, TouchableOpacity, View, StatusBar, Keyboard } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, StatusBar, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { SCREENS } from "../../helpers/constants";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import BaseUrl from "../url";
 
 const LoginPage = ({ navigation }) => {
@@ -27,15 +28,20 @@ const LoginPage = ({ navigation }) => {
             method: 'POST',
             body: JSON.stringify(dataToSend),
             headers: {
-                //Header Defination
                 'Content-Type': 'application/json',
             },
         })
             .then((response) => response.json())
-            .then((responseJson) => {
+            .then(async (responseJson) => {
                 if (responseJson.status === 'success') {
                     console.log(responseJson.data);
-                    navigation.replace('Home');
+                    try {
+                        await AsyncStorage.setItem('user', JSON.stringify(responseJson.data)).then(() => {
+                            navigation.replace('Home');
+                        });
+                    } catch (error) {
+                        console.error('Error reading or writing user data:', error);
+                    }
                 } else {
                     setErrortext(responseJson.error);
                 }
@@ -178,5 +184,5 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         fontSize: 14,
-      },
+    },
 });

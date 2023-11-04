@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  SafeAreaView,
-  Text,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  TouchableHighlight,
-  FlatList,
-  Dimensions
-} from "react-native";
+import { View, SafeAreaView, Text, TextInput, ScrollView, TouchableOpacity, Image, StyleSheet, TouchableHighlight, FlatList, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { CategoriesModel } from "../../models/categories.model";
 import { FoodModel } from "../../models/foods.model";
 import { SCREENS } from "../../helpers/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import BaseUrl from "../url";
+import EventBus from "../EventBus";
 
 const { width } = Dimensions.get('window'); // Lấy kích thước màn hình
 const cardWidth = width / 2 - 20; // Tính toán kích thước cho card
@@ -25,6 +15,7 @@ type CategoryItemProps = {
   itemCategory: CategoriesModel;
   onPress: () => void;
 };
+
 //'img_foods/onboard.png'
 const CategoryList = () => {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
@@ -119,7 +110,7 @@ const FoodItem = ({ itemFood, onPressF }: FoodItemProps) => (
   </TouchableHighlight>
 );
 
-const FoodHome = ({ navigation }) => {
+const FoodHome = ({ navigation }: { navigation: any }) => {
   const goToDetailScreen = (name: string, image: string) => {
     navigation.navigate(SCREENS.DETAIL, {
       foodName: name,
@@ -128,20 +119,41 @@ const FoodHome = ({ navigation }) => {
   };
 
   const [foods, setFoods] = useState([]);
-  useEffect(() => {
-    const fetchFoods = async () => {
-      try {
-        const response = await fetch(BaseUrl + 'food');
-        if (response.status === 200) {
-          const data = await response.json();
-          setFoods(data);
-        }
-      } catch (error) {
-        console.error('Error fetching food:', error );
-      }
-    };
+  const [user, setUser] = useState<any>([]);
 
+  const User = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+      if (value) {
+        const userData = JSON.parse(value);
+        setUser(userData);
+        // console.log(userData);
+      }
+    } catch (error) {
+      console.error('Error reading user data:', error);
+    }
+  };
+
+  const fetchFoods = async () => {
+    try {
+      const response = await fetch(BaseUrl + 'food');
+      if (response.status === 200) {
+        const data = await response.json();
+        setFoods(data);
+      }
+    } catch (error) {
+      console.error('Error fetching food:', error);
+    }
+  };
+
+  const handleUserChange = (newUser: any) => {
+    setUser(newUser);
+  };
+
+  useEffect(() => {
     fetchFoods();
+    User();
+    EventBus.on('userChanged', handleUserChange);
   }, []);
 
   return (
@@ -150,7 +162,7 @@ const FoodHome = ({ navigation }) => {
         <View>
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontSize: 22, color: "black" }}>Hello,</Text>
-            <Text style={{ fontSize: 22, fontWeight: "bold", marginLeft: 10, color: "black" }}>Linh</Text>
+            <Text style={{ fontSize: 22, fontWeight: "bold", marginLeft: 10, color: "black" }}>{ user.name }</Text>
           </View>
           <Text style={{ marginTop: 7, fontSize: 20, color: "grey" }}>What do you want to do?</Text>
         </View>
