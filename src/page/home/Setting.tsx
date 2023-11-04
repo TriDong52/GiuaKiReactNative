@@ -102,12 +102,12 @@ const SetScreen = ({ navigation }: { navigation: any }) => {
             return;
         }
 
-        if( newPass != confirmPass ){
+        if (newPass != confirmPass) {
             alert('Mật khẩu mới không khớp');
             return;
         }
 
-        let dataToSend = {  id: user.id , oldPass: oldPass, newPass: newPass };
+        let dataToSend = { id: user.id, oldPass: oldPass, newPass: newPass };
 
         fetch(BaseUrl + 'changePassword', {
             method: 'POST',
@@ -117,32 +117,24 @@ const SetScreen = ({ navigation }: { navigation: any }) => {
             },
         })
             .then((response) => response.json())
-            .then(async (responseJson) => {
+            .then((responseJson) => {
                 if (responseJson.status === "success") {
-                    try {
-                        await AsyncStorage.setItem('user', JSON.stringify(responseJson.data)).then(() => {
-                            setUser(responseJson.data);
-                            EventBus.emit('userChanged', responseJson.data);
-                        });
-                        Alert.alert(
-                            'Thành công',
-                            'Bạn đã cập nhật tên thành công',
-                            [
-                                {
-                                    text: 'Confirm',
-                                    onPress: () => {
-                                        return null;
-                                    },
-                                }
-                            ],
-                            { cancelable: false },
-                        );
-                    } catch (error) {
-                        console.error('Error reading or writing user data:', error);
-                    }
+                    Alert.alert(
+                        'Thành công',
+                        'Bạn đã cập nhật mật khẩu thành công',
+                        [
+                            {
+                                text: 'Confirm',
+                                onPress: () => {
+                                    return null;
+                                },
+                            }
+                        ],
+                        { cancelable: false },
+                    );
                     console.log(responseJson.data);
                 } else {
-                    setErrortext(responseJson.error);
+                    alert(responseJson.error);
                 }
             })
             .catch((error) => {
@@ -198,7 +190,7 @@ const SetScreen = ({ navigation }: { navigation: any }) => {
                                         </Text>
                                     ) : null}
                                     <View style={{ margin: 15, }}>
-                                        <Button title="Save" color={'orange'} onPress={()=>{handleChangeInfoPress();closeChangeInfoModal();}}/>
+                                        <Button title="Save" color={'orange'} onPress={() => { handleChangeInfoPress(); closeChangeInfoModal(); }} />
                                     </View>
                                     <TouchableOpacity onPress={closeChangeInfoModal} style={{ position: 'absolute', top: 10, right: 10 }}>
                                         <Icon name="close" size={22} color="black" />
@@ -235,7 +227,7 @@ const SetScreen = ({ navigation }: { navigation: any }) => {
                                         </Text>
                                     ) : null}
                                     <View style={{ margin: 15, }}>
-                                        <Button title="Save" color={'orange'} onPress={()=>{handleChangePassPress();closeChangePasswordModal();}} />
+                                        <Button title="Save" color={'orange'} onPress={() => { handleChangePassPress(); closeChangePasswordModal(); }} />
                                     </View>
                                     <TouchableOpacity onPress={closeChangePasswordModal} style={{ position: 'absolute', top: 10, right: 10 }}>
                                         <Icon name="close" size={22} color="black" />

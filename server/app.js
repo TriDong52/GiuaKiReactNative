@@ -40,25 +40,6 @@ app.get('/food', function (req, res) {
 app.use('/img_foods', express.static('public/foods'));
 app.use('/img_categories', express.static('public/categories'));
 
-// app.get('/user/:id', (req, res) => {
-//   const userId = req.params.id;
-
-//   const selectQuery = 'SELECT id, name, email FROM users WHERE id = ?';
-//   db.query(selectQuery, [userId], (selectErr, selectResults) => {
-//     if (selectErr) {
-//       res.status(500).json({ error: 'Lỗi trong quá trình lấy thông tin người dùng.' });
-//     } else {
-//       if (selectResults.length > 0) {
-//         const userData = selectResults[0];
-//         res.status(200).json({ data: userData });
-//       } else {
-//         res.status(404).json({ error: 'Không tìm thấy người dùng với id cung cấp.' });
-//       }
-//     }
-//   });
-// });
-
-
 app.post("/register", function (req, res, next) {
   const { name, password, email } = req.body;
   bcrypt.hash(password, saltRounds, (hashErr, hashedPassword) => {
@@ -117,9 +98,8 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/changePassword', (req, res) => {
-  const { id, oldPassword, newPassword } = req.body;
+  const { id, oldPass, newPass } = req.body;
 
-  // Thực hiện truy vấn để lấy mật khẩu đã băm từ cơ sở dữ liệu
   const selectQuery = 'SELECT password FROM users WHERE id = ?';
   db.query(selectQuery, [id], (selectErr, selectResults) => {
     if (selectErr) {
@@ -130,24 +110,23 @@ app.post('/changePassword', (req, res) => {
       const hashedPassword = selectResults[0].password;
 
       // So sánh mật khẩu đã băm
-      bcrypt.compare(oldPassword, hashedPassword, (bcryptErr, bcryptResult) => {
+      bcrypt.compare(oldPass, hashedPassword, (bcryptErr, bcryptResult) => {
         if (bcryptErr) {
           res.status(500).json({ error: 'Lỗi trong quá trình so sánh mật khẩu.' });
         } else if (!bcryptResult) {
           res.status(401).json({ error: 'Mật khẩu cũ không chính xác.' });
         } else {
           // Băm mật khẩu mới
-          bcrypt.hash(newPassword, 10, (hashErr, hash) => {
+          bcrypt.hash(newPass, 10, (hashErr, hash) => {
             if (hashErr) {
               res.status(500).json({ error: 'Lỗi trong quá trình băm mật khẩu mới.' });
             } else {
-              // Thực hiện cập nhật mật khẩu mới vào cơ sở dữ liệu
               const updateQuery = 'UPDATE users SET password = ? WHERE id = ?';
               db.query(updateQuery, [hash, id], (updateErr, updateResults) => {
                 if (updateErr) {
                   res.status(500).json({ error: 'Lỗi trong quá trình cập nhật mật khẩu mới.' });
                 } else {
-                  res.status(200).json({ message: 'Mật khẩu đã được thay đổi.' });
+                  res.send({status: "success", message: "cập nhật mật khẩu thành công"});
                 }
               });
             }
@@ -162,7 +141,6 @@ app.put('/changeUsername/:iduser', (req, res) => {
   const iduser = req.params.iduser;
   const newUsername = req.body.newUsername;
 
-  // Thực hiện cập nhật tên người dùng vào cơ sở dữ liệu
   const updateQuery = 'UPDATE users SET name = ? WHERE id = ?';
   db.query(updateQuery, [newUsername, iduser], (updateErr, updateResults) => {
     if (updateErr) {
