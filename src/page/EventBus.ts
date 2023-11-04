@@ -16,16 +16,6 @@ class EventBus {
         });
       }
     }
-
-    off(event: string, callback: (data: any) => void) {
-      const callbacks = this.events[event];
-      if (callbacks) {
-        const index = callbacks.indexOf(callback);
-        if (index !== -1) {
-          callbacks.splice(index, 1);
-        }
-      }
-    }
   }
   
   export default new EventBus();

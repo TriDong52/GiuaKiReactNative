@@ -7,8 +7,8 @@ const saltRounds = 10;
 
 app.use(bodyParser.json());
 const port = 3000;
-// const host = '127.0.0.1';
-const host = '192.168.100.36';
+const host = '127.0.0.1';
+// const host = '192.168.100.36';
 
 const db = mysql.createPool({
   host: 'localhost',

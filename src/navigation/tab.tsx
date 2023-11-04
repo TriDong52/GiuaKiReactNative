@@ -1,24 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { SCREENS } from "../helpers/constants";
 import FoodHome from "../page/home/FoodHome";
-import LoginPage from "../page/home/Login";
-import RegisterPage from "../page/home/Register";
 import CartFood from "../page/home/cartFood";
 import SetScreen from "../page/home/Setting";
-
-const LoginStack = createNativeStackNavigator()
-
-const LoginStackScreen = () => {
-  return (
-    <LoginStack.Navigator screenOptions={{headerShown:false}}>
-      <LoginStack.Screen name={SCREENS.LOGIN} component={LoginPage} />
-      <LoginStack.Screen name={SCREENS.REGISTER} component={RegisterPage} />
-    </LoginStack.Navigator>
-  )
-}
 
 const TabNavigation = () => {
   const Tab = createBottomTabNavigator();
